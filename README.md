@@ -76,5 +76,16 @@ From the $HOME directory on the K8s master server run the ce-k8s.sh script and p
 * Apply the Configuration: Deploys the generated Kubernetes resources by applying the ce-k8s.yaml configuration file to the cluster.
 * Verification Instructions: Provides instructions for the user to verify that the Kubernetes resources, particularly the vp-manager pod, have been created successfully.
 
+## XC Console
+Login in to XC Cloud Console and accept the CE registration request.
+
+### Multicloud Network Connect -> Manage -> Site Management -> Registrations
+
+Click Accept on the CE registration request.
+
+
+
+
+
 
 

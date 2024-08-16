@@ -1,5 +1,7 @@
 A Site deployed as a pod on a K8s cluster acts as a K8s ingress controller with built-in application security. It also enables the F5® Distributed Cloud Mesh (Mesh) features, such as discovery of services of the K8s cluster, publish of other Site's services on this Site, publish of this Site's discovered services on other Sites, etc.
 
+Reference Doc: https://docs.cloud.f5.com/docs/how-to/site-management/create-k8s-site
+
 # Overview and Goals 
 1.  Build and configure a Ubuntu server with K8's. 
 2.  Configure K8s site type CE ingress controller for Service Discovery
@@ -38,11 +40,45 @@ Both are supported. This lab is built using the kubectl method. The Helm chart i
 
 # XC Console 
 
-Step 1: Login to XC tenant – create site token:
+Login to XC tenant – create site token:
 
 Multicloud Network Connect -> Manage -> Site Management -> Site Tokens -> Create
 
 
-Step 2: Prepare the K8s YAML manifest
+# Ubuntu Server
 
-The manifest file contains a YAML schema used for descriptor information to support deployment of Kubernetes for a Site.
+## Install K8s
+1. ssh into ubuntu-k8s server
+2. Copy k8s-install.sh script into $HOME directory.
+3. Give script exe permissions (chmod +x k8s-install.sh)
+4. Run ./k8s-install.sh
+5. Optionally deploy a worker node and in the $HOME directory run the k8s-install-worker.sh script (in utils folder), then join it to the cluster. 
+
+### Script Overview
+The k8s-install.sh script performs the following tasks:
+
+* Installs required packages and dependencies
+* Sets up Kubernetes components (e.g., kubeadm, kubelet, kubectl)
+* Configures networking and security settings
+* Initializes the Kubernetes cluster
+* Applies security best practices to the cluster configuration
+
+### Prepare the K8s YAML manifest
+
+The manifest file contains a YAML schema used for descriptor information to support deployment of Kubernetes for a Site. https://gitlab.com/volterra.io/volterra-ce/-/blob/master/k8s/ce_k8s.yml
+
+From the $HOME directory on the K8s master server run the ce-k8s.sh script and provide the user-input variables. 
+
+### Script Overview
+* User Input Collection: Gathers necessary configuration details from the user, such as cluster name, latitude, longitude, site token, and the number of replicas.
+
+* PersistentVolume Creation: Manually creates PersistentVolumes (PVs) required by the Kubernetes StatefulSet for data storage.
+
+* Generate Kubernetes YAML Configuration: Dynamically generates a Kubernetes configuration file (ce-k8s.yaml) based on user inputs, which defines namespaces, service accounts, roles, role bindings, daemonsets, and a statefulset.
+
+* Apply the Configuration: Deploys the generated Kubernetes resources by applying the ce-k8s.yaml configuration file to the cluster.
+
+* Verification Instructions: Provides instructions for the user to verify that the Kubernetes resources, particularly the vp-manager pod, have been created successfully.
+
+
+

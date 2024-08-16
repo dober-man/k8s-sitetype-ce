@@ -85,6 +85,16 @@ Click Accept on the CE registration request.
 
 <img width="1082" alt="image" src="https://github.com/user-attachments/assets/946e8c9a-cac1-40f9-9f58-2ba08706cf74">
 
+Make sure to verify the information and set the tunnel type towards the bottom: 
+
+<img width="982" alt="image" src="https://github.com/user-attachments/assets/ccd82f80-aa0f-48e3-b4da-773b52c97475">
+
+Click on "Sites" from the left Nav menu. Note the status of your CE cluster. It could take some time for provisioning to complete. 
+
+<img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
+
+
+
 
 
 

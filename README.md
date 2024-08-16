@@ -71,13 +71,9 @@ From the $HOME directory on the K8s master server run the ce-k8s.sh script and p
 
 ### Script Overview
 * User Input Collection: Gathers necessary configuration details from the user, such as cluster name, latitude, longitude, site token, and the number of replicas.
-
 * PersistentVolume Creation: Manually creates PersistentVolumes (PVs) required by the Kubernetes StatefulSet for data storage.
-
 * Generate Kubernetes YAML Configuration: Dynamically generates a Kubernetes configuration file (ce-k8s.yaml) based on user inputs, which defines namespaces, service accounts, roles, role bindings, daemonsets, and a statefulset.
-
 * Apply the Configuration: Deploys the generated Kubernetes resources by applying the ce-k8s.yaml configuration file to the cluster.
-
 * Verification Instructions: Provides instructions for the user to verify that the Kubernetes resources, particularly the vp-manager pod, have been created successfully.
 
 

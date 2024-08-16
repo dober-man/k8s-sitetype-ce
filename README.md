@@ -83,6 +83,7 @@ Login in to XC Cloud Console and accept the CE registration request.
 
 Click Accept on the CE registration request.
 
+<img width="1082" alt="image" src="https://github.com/user-attachments/assets/946e8c9a-cac1-40f9-9f58-2ba08706cf74">
 
 
 

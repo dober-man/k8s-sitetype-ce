@@ -25,6 +25,24 @@ XC Console - (You will need owner/admin access to a tenant)
 ### HugePages 
 A feature of the Linux kernel. Verify node support by running: grep HugePages /proc/meminfo
 
+### Kubectl or Helm chart deployment?
+Both are supported. This lab is built using the kubectl method. The Helm chart install method is covered here: https://docs.cloud.f5.com/docs/how-to/site-management/create-k8s-site
+
+## Kubectl-Based Configuration Sequence
+
+1. Create a Site token.
+2. Prepare a manifest file with the parameters required for Site provisioning.
+3. Deploy the Site using the kubeconfig of the K8s cluster and the manifest file.
+4. Perform Site registration.
+5. Verify that Distributed Cloud Services are running.
+
+# XC Console 
+
+Step 1: Login to XC tenant – create site token:
+
+Multicloud Network Connect -> Manage -> Site Management -> Site Tokens -> Create
 
 
+Step 2: Prepare the K8s YAML manifest
 
+The manifest file contains a YAML schema used for descriptor information to support deployment of Kubernetes for a Site.

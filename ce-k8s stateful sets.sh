@@ -109,63 +109,6 @@ EOF
 
 echo "PersistentVolumes have been created."
 
-# Create PersistentVolumeClaims
-cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: etcvpm
-  namespace: ves-system
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  volumeName: pv-etcvpm
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: varvpm
-  namespace: ves-system
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  volumeName: pv-varvpm
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: data
-  namespace: ves-system
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  volumeName: pv-data
----
-apiVersion: v1
-kind: PersistentVolumeClaim
-metadata:
-  name: etcd-0
-  namespace: ves-system
-spec:
-  accessModes:
-    - ReadWriteOnce
-  resources:
-    requests:
-      storage: 1Gi
-  volumeName: pv-etcd-0
-EOF
-
-echo "PersistentVolumeClaims have been created."
-
 # Generate the YAML configuration with user inputs
 cat <<EOF > ce-k8s.yaml
 apiVersion: v1
@@ -323,7 +266,7 @@ data:
     CertifiedHardware: k8s-minikube-voltmesh
 ---
 apiVersion: apps/v1
-kind: Deployment
+kind: StatefulSet 
 metadata:
   name: vp-manager
   namespace: ves-system
@@ -332,10 +275,12 @@ spec:
   selector:
     matchLabels:
       name: vpm
+  serviceName: "vp-manager"
   template:
     metadata:
       labels:
         name: vpm
+        statefulset: vp-manager
     spec:
       serviceAccountName: vpm-sa
       affinity:
@@ -376,7 +321,7 @@ spec:
           mountPath: /data
         securityContext:
           privileged: true
-      terminationGracePeriodSeconds: 30 
+      terminationGracePeriodSeconds: 1 
       volumes:
       - name: podinfo
         downwardAPI:
@@ -387,15 +332,28 @@ spec:
       - name: vpmconfigmap
         configMap:
           name: vpm-cfg
-      - name: etcvpm
-        persistentVolumeClaim:
-          claimName: etcvpm
-      - name: varvpm
-        persistentVolumeClaim:
-          claimName: varvpm
-      - name: data
-        persistentVolumeClaim:
-          claimName: data
+  volumeClaimTemplates:
+  - metadata:
+      name: etcvpm
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: varvpm
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
 ---
 apiVersion: v1
 kind: Service
@@ -411,6 +369,7 @@ spec:
     port: 65003
     targetPort: 65003
 EOF
+
 
 echo "YAML configuration file 'ce-k8s.yaml' has been generated."
 

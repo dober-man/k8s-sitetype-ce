@@ -76,6 +76,10 @@ From the $HOME directory on the K8s master server run the ce-k8s.sh script and p
 * Apply the Configuration: Deploys the generated Kubernetes resources by applying the ce-k8s.yaml configuration file to the cluster.
 * Verification Instructions: Provides instructions for the user to verify that the Kubernetes resources, particularly the vp-manager pod, have been created successfully.
 
+<img width="685" alt="image" src="https://github.com/user-attachments/assets/64dbc337-7af1-4247-8310-3f5420cb34cd">
+
+
+
 ## XC Console
 Login in to XC Cloud Console and accept the CE registration request.
 
@@ -93,7 +97,8 @@ Click on "Sites" from the left Nav menu. Note the status of your CE cluster. It 
 
 <img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
 
-
+You will vp-manager-0 restart and after about 90s etcd will show up
+<img width="611" alt="image" src="https://github.com/user-attachments/assets/785887d9-da6a-42eb-8b05-57fdc2b3c238">
 
 
 

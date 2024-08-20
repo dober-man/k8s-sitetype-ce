@@ -97,9 +97,14 @@ Click on "Sites" from the left Nav menu. Note the status of your CE cluster. It 
 
 <img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
 
+<<<<<<< Updated upstream
 You will vp-manager-0 restart and after about 90s etcd will show up
 <img width="611" alt="image" src="https://github.com/user-attachments/assets/785887d9-da6a-42eb-8b05-57fdc2b3c238">
 
+=======
+
+## 8/16/2024 THis is where progress stops at the moment. Site remains stuck in pending state and cmplains about tunnels to RE are down. Need to open case. 
+>>>>>>> Stashed changes
 
 
 

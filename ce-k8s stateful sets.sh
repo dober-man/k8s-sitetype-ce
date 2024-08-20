@@ -1,5 +1,7 @@
 #!/bin/bash
 
+set -e  # Exit immediately if any command fails
+
 # Function to check if a directory exists and create it if it doesn't
 create_dir_if_not_exists() {
   if [ ! -d "$1" ]; then
@@ -39,7 +41,10 @@ echo "Latitude: $latitude"
 echo "Longitude: $longitude"
 echo "Site Token: $site_token"
 echo "Replicas: $replicas"
-echo "NIC: $nic"
+
+# Create namespace first
+kubectl create namespace ves-system || true  # If the namespace exists, continue without error
+
 
 # Ensure required directories exist for PersistentVolumes
 create_dir_if_not_exists "/mnt/data/etcvpm"
@@ -60,6 +65,7 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mnt/data/etcvpm
+  persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -72,6 +78,7 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mnt/data/varvpm
+  persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -84,6 +91,7 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mnt/data/data
+  persistentVolumeReclaimPolicy: Retain
 ---
 apiVersion: v1
 kind: PersistentVolume
@@ -96,9 +104,67 @@ spec:
     - ReadWriteOnce
   hostPath:
     path: /mnt/data/etcd-0
+  persistentVolumeReclaimPolicy: Retain
 EOF
 
 echo "PersistentVolumes have been created."
+
+# Create PersistentVolumeClaims
+cat <<EOF | kubectl apply -f -
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: etcvpm
+  namespace: ves-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pv-etcvpm
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: varvpm
+  namespace: ves-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pv-varvpm
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: data
+  namespace: ves-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pv-data
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: etcd-0
+  namespace: ves-system
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: 1Gi
+  volumeName: pv-etcd-0
+EOF
+
+echo "PersistentVolumeClaims have been created."
 
 # Generate the YAML configuration with user inputs
 cat <<EOF > ce-k8s.yaml
@@ -257,7 +323,7 @@ data:
     CertifiedHardware: k8s-minikube-voltmesh
 ---
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: Deployment
 metadata:
   name: vp-manager
   namespace: ves-system
@@ -266,12 +332,10 @@ spec:
   selector:
     matchLabels:
       name: vpm
-  serviceName: "vp-manager"
   template:
     metadata:
       labels:
         name: vpm
-        statefulset: vp-manager
     spec:
       serviceAccountName: vpm-sa
       affinity:
@@ -312,7 +376,7 @@ spec:
           mountPath: /data
         securityContext:
           privileged: true
-      terminationGracePeriodSeconds: 1 
+      terminationGracePeriodSeconds: 30 
       volumes:
       - name: podinfo
         downwardAPI:
@@ -323,28 +387,15 @@ spec:
       - name: vpmconfigmap
         configMap:
           name: vpm-cfg
-  volumeClaimTemplates:
-  - metadata:
-      name: etcvpm
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-  - metadata:
-      name: varvpm
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
-  - metadata:
-      name: data
-    spec:
-      accessModes: [ "ReadWriteOnce" ]
-      resources:
-        requests:
-          storage: 1Gi
+      - name: etcvpm
+        persistentVolumeClaim:
+          claimName: etcvpm
+      - name: varvpm
+        persistentVolumeClaim:
+          claimName: varvpm
+      - name: data
+        persistentVolumeClaim:
+          claimName: data
 ---
 apiVersion: v1
 kind: Service
@@ -359,63 +410,6 @@ spec:
   - protocol: TCP
     port: 65003
     targetPort: 65003
-# CHANGE ME
-# PLEASE UNCOMMENT TO ENABLE SITE TO SITE ACCESS VIA NODEPORT
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: ver-nodeport-ver-0
-#  namespace: ves-system
-#  labels:
-#    app: ver
-#spec:
-#  type: NodePort
-#  ports:
-#    - name: "ver-ike"
-#      protocol: UDP
-#      port: 4500
-#      targetPort: 4500
-#      nodePort: 30500
-#  selector:
-#    statefulset.kubernetes.io/pod-name: ver-0
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: ver-nodeport-ver-1
-#  namespace: ves-system
-#  labels:
-#    app: ver
-#spec:
-#  type: NodePort
-#  ports:
-#    - name: "ver-ike"
-#      protocol: UDP
-#      port: 4500
-#      targetPort: 4500
-#      nodePort: 30501
-#  selector:
-#    statefulset.kubernetes.io/pod-name: ver-1
-#---
-#apiVersion: v1
-#kind: Service
-#metadata:
-#  name: ver-nodeport-ver-2
-#  namespace: ves-system
-#  labels:
-#    app: ver
-#spec:
-#  type: NodePort
-#  ports:
-#    - name: "ver-ike"
-#      protocol: UDP
-#      port: 4500
-#      targetPort: 4500
-#      nodePort: 30502
-#  selector:
-#    statefulset.kubernetes.io/pod-name: ver-2
-
 EOF
 
 echo "YAML configuration file 'ce-k8s.yaml' has been generated."

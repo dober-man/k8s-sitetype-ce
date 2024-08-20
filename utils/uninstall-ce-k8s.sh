@@ -1,43 +1,48 @@
 #!/bin/bash
 
-# Confirm uninstallation
-read -p "Are you sure you want to uninstall the resources in the 'ves-system' namespace and remove the 'local-storage' StorageClass? (y/n): " confirm
-if [[ $confirm != "y" ]]; then
-  echo "Uninstallation aborted."
-  exit 1
+# Uninstall script for removing resources created by the CE setup script
+
+# Delete the YAML configuration applied
+if [ -f "ce-k8s.yaml" ]; then
+  kubectl delete -f ce-k8s.yaml
+  echo "Deleted resources from ce-k8s.yaml."
+else
+  echo "ce-k8s.yaml not found. Skipping deletion of resources."
 fi
 
-# Delete the yaml file
-echo "Deleting ce-k8s.yaml file."
-rm -rf $HOME/ce-k8s.yaml
+# Delete PersistentVolumes
+kubectl delete pv pv-etcvpm pv-varvpm pv-data pv-etcd-0
+echo "Deleted PersistentVolumes: pv-etcvpm, pv-varvpm, pv-data, pv-etcd-0."
 
-# Delete the resources in the ves-system namespace
-echo "Deleting resources in the 'ves-system' namespace..."
+# Optional: Clean up any remaining artifacts
+rm -f ce-k8s.yaml
+echo "Removed ce-k8s.yaml file."
 
-kubectl delete namespace ves-system
-
-# Delete the StorageClass
-echo "Deleting the 'local-storage' StorageClass..."
-
-kubectl delete storageclass local-storage
-
-# Delete the PersistentVolumeClaims
-echo "Deleting PersistentVolumeClaims in the 'ves-system' namespace..."
-
-kubectl delete pvc -n ves-system --all
-
-# Delete PersistentVolumes that might have been created manually
-echo "Deleting any manually created PersistentVolumes..."
-
-kubectl delete pv $(kubectl get pv -o name | grep 'pv-etcvpm\|pv-varvpm\|pv-data')
-
-# Confirm the deletion of all resources
+# Verify that all resources have been deleted
 echo "Verifying that all resources have been deleted..."
+kubectl get all -n ves-system --ignore-not-found
+kubectl get pv --ignore-not-found
+kubectl get pvc --ignore-not-found
 
-kubectl get all -n ves-system
 
-kubectl get storageclass
+# Function to remove a directory if it exists
+remove_dir_if_exists() {
+    local dir=$1
+    if [ -d "$dir" ]; then
+        echo "Removing directory: $dir"
+        rm -rf "$dir"
+        echo "Directory $dir removed."
+    else
+        echo "Directory $dir does not exist. Skipping."
+    fi
+}
 
-kubectl get pv
+# Directories to be removed
+remove_dir_if_exists "/mnt/data/etcvpm"
+remove_dir_if_exists "/mnt/data/varvpm"
+remove_dir_if_exists "/mnt/data/data"
+remove_dir_if_exists "/mnt/data/etcd-0"
+
+echo "All specified directories have been processed."
 
 echo "Uninstallation completed."

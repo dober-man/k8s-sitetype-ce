@@ -82,7 +82,7 @@ Click Accept on the CE registration request.
 
 <img width="1082" alt="image" src="https://github.com/user-attachments/assets/946e8c9a-cac1-40f9-9f58-2ba08706cf74">
 
-SET OS VERSION
+SET OS VERSION - crt-20231010-2541
 
 Make sure to verify the information and set the tunnel type towards the bottom: 
 
@@ -92,8 +92,7 @@ Click on "Sites" from the left Nav menu. Note the status of your CE cluster. It 
 
 <img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
 
-<<<<<<< Updated upstream
-You will vp-manager-0 restart and after about 90s etcd will show up
+You will see vp-manager-0 restart and after about 90s etcd will show up
 <img width="611" alt="image" src="https://github.com/user-attachments/assets/785887d9-da6a-42eb-8b05-57fdc2b3c238">
 
 

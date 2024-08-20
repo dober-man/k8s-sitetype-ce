@@ -1,48 +1,78 @@
 #!/bin/bash
 
-# Uninstall script for removing resources created by the CE setup script
+set -e  # Exit immediately if any command fails
 
-# Delete the YAML configuration applied
-if [ -f "ce-k8s.yaml" ]; then
-  kubectl delete -f ce-k8s.yaml
-  echo "Deleted resources from ce-k8s.yaml."
-else
-  echo "ce-k8s.yaml not found. Skipping deletion of resources."
-fi
+# Function to delete resources if they exist
+delete_resource_if_exists() {
+  resource_type=$1
+  resource_name=$2
+  namespace=$3
 
-# Delete PersistentVolumes
-kubectl delete pv pv-etcvpm pv-varvpm pv-data pv-etcd-0
-echo "Deleted PersistentVolumes: pv-etcvpm, pv-varvpm, pv-data, pv-etcd-0."
-
-# Optional: Clean up any remaining artifacts
-rm -f ce-k8s.yaml
-echo "Removed ce-k8s.yaml file."
-
-# Verify that all resources have been deleted
-echo "Verifying that all resources have been deleted..."
-kubectl get all -n ves-system --ignore-not-found
-kubectl get pv --ignore-not-found
-kubectl get pvc --ignore-not-found
-
-
-# Function to remove a directory if it exists
-remove_dir_if_exists() {
-    local dir=$1
-    if [ -d "$dir" ]; then
-        echo "Removing directory: $dir"
-        rm -rf "$dir"
-        echo "Directory $dir removed."
-    else
-        echo "Directory $dir does not exist. Skipping."
-    fi
+  if kubectl get "$resource_type" "$resource_name" -n "$namespace" &>/dev/null; then
+    echo "Deleting $resource_type $resource_name in namespace $namespace..."
+    kubectl delete "$resource_type" "$resource_name" -n "$namespace"
+  else
+    echo "$resource_type $resource_name in namespace $namespace does not exist."
+  fi
 }
 
-# Directories to be removed
-remove_dir_if_exists "/mnt/data/etcvpm"
-remove_dir_if_exists "/mnt/data/varvpm"
-remove_dir_if_exists "/mnt/data/data"
-remove_dir_if_exists "/mnt/data/etcd-0"
+# Function to delete a cluster-wide resource
+delete_cluster_resource_if_exists() {
+  resource_type=$1
+  resource_name=$2
 
-echo "All specified directories have been processed."
+  if kubectl get "$resource_type" "$resource_name" &>/dev/null; then
+    echo "Deleting cluster-wide $resource_type $resource_name..."
+    kubectl delete "$resource_type" "$resource_name"
+  else
+    echo "Cluster-wide $resource_type $resource_name does not exist."
+  fi
+}
 
-echo "Uninstallation completed."
+# Delete the StatefulSet
+delete_resource_if_exists statefulset vp-manager ves-system
+
+# Delete the DaemonSet
+delete_resource_if_exists daemonset volterra-ce-init ves-system
+
+# Delete the ConfigMap
+delete_resource_if_exists configmap vpm-cfg ves-system
+
+# Delete the Service
+delete_resource_if_exists service vpm ves-system
+
+# Delete the ServiceAccounts
+delete_resource_if_exists serviceaccount volterra-sa ves-system
+delete_resource_if_exists serviceaccount vpm-sa ves-system
+
+# Delete the RoleBindings
+delete_resource_if_exists rolebinding volterra-admin-role-binding ves-system
+delete_resource_if_exists rolebinding vpm-role-binding ves-system
+
+# Delete the Roles
+delete_resource_if_exists role volterra-admin-role ves-system
+delete_resource_if_exists role vpm-role ves-system
+
+# Delete the ClusterRoleBindings
+delete_cluster_resource_if_exists clusterrolebinding vpm-sa
+delete_cluster_resource_if_exists clusterrolebinding ver
+
+# Delete the ClusterRoles
+delete_cluster_resource_if_exists clusterrole vpm-cluster-role
+
+# Delete the namespace (this will remove all remaining resources in the namespace)
+if kubectl get namespace ves-system &>/dev/null; then
+  echo "Deleting namespace ves-system..."
+  kubectl delete namespace ves-system
+else
+  echo "Namespace ves-system does not exist."
+fi
+
+# Delete the StorageClass
+delete_cluster_resource_if_exists storageclass local-path
+
+# Uninstall the local-path provisioner
+echo "Uninstalling local-path provisioner..."
+kubectl delete -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
+
+echo "Uninstallation complete."

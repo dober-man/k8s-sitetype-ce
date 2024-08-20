@@ -2,14 +2,6 @@
 
 set -e  # Exit immediately if any command fails
 
-# Function to check if a directory exists and create it if it doesn't
-create_dir_if_not_exists() {
-  if [ ! -d "$1" ]; then
-    echo "Directory $1 does not exist. Creating it..."
-    mkdir -p "$1"
-  fi
-}
-
 # Function to validate if input is a number
 validate_number() {
   if ! [[ $1 =~ ^-?[0-9]+([.][0-9]+)?$ ]]; then
@@ -24,7 +16,6 @@ read -p "Enter the Latitude: " latitude
 read -p "Enter the Longitude: " longitude
 read -p "Enter the Site Token (from XC Console): " site_token
 read -p "Enter the number of replicas (1 for single-node, 3 for multi-node): " replicas
-
 
 # Validate inputs
 validate_number "$latitude" "Latitude"
@@ -45,69 +36,20 @@ echo "Replicas: $replicas"
 # Create namespace first
 kubectl create namespace ves-system || true  # If the namespace exists, continue without error
 
+# Apply the local-path provisioner
+kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 
-# Ensure required directories exist for PersistentVolumes
-create_dir_if_not_exists "/mnt/data/etcvpm"
-create_dir_if_not_exists "/mnt/data/varvpm"
-create_dir_if_not_exists "/mnt/data/data"
-create_dir_if_not_exists "/mnt/data/etcd-0"
-
-# Create PersistentVolumes
+# Create StorageClass for dynamic provisioning
 cat <<EOF | kubectl apply -f -
-apiVersion: v1
-kind: PersistentVolume
+apiVersion: storage.k8s.io/v1
+kind: StorageClass
 metadata:
-  name: pv-etcvpm
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/data/etcvpm
-  persistentVolumeReclaimPolicy: Retain
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-varvpm
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/data/varvpm
-  persistentVolumeReclaimPolicy: Retain
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-data
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/data/data
-  persistentVolumeReclaimPolicy: Retain
----
-apiVersion: v1
-kind: PersistentVolume
-metadata:
-  name: pv-etcd-0
-spec:
-  capacity:
-    storage: 1Gi
-  accessModes:
-    - ReadWriteOnce
-  hostPath:
-    path: /mnt/data/etcd-0
-  persistentVolumeReclaimPolicy: Retain
+  name: local-path
+provisioner: rancher.io/local-path
+volumeBindingMode: WaitForFirstConsumer
 EOF
 
-echo "PersistentVolumes have been created."
+echo "StorageClass 'local-path' created."
 
 # Generate the YAML configuration with user inputs
 cat <<EOF > ce-k8s.yaml
@@ -266,12 +208,12 @@ data:
     CertifiedHardware: k8s-minikube-voltmesh
 ---
 apiVersion: apps/v1
-kind: StatefulSet 
+kind: StatefulSet
 metadata:
   name: vp-manager
   namespace: ves-system
 spec:
-  replicas: $replicas
+  replicas: 1
   selector:
     matchLabels:
       name: vpm
@@ -340,6 +282,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
+      storageClassName: local-path
   - metadata:
       name: varvpm
     spec:
@@ -347,6 +290,7 @@ spec:
       resources:
         requests:
           storage: 1Gi
+      storageClassName: local-path
   - metadata:
       name: data
     spec:
@@ -354,6 +298,40 @@ spec:
       resources:
         requests:
           storage: 1Gi
+      storageClassName: local-path
+---
+apiVersion: apps/v1
+kind: StatefulSet
+metadata:
+  name: etcd
+  namespace: ves-system
+spec:
+  serviceName: "etcd"
+  replicas: 1
+  selector:
+    matchLabels:
+      app: etcd
+  template:
+    metadata:
+      labels:
+        app: etcd
+    spec:
+      serviceAccountName: volterra-etcd
+      containers:
+      - name: etcd
+        image: gcr.io/volterraio/etcd:latest
+        volumeMounts:
+        - name: data
+          mountPath: /var/lib/etcd
+  volumeClaimTemplates:
+  - metadata:
+      name: data
+    spec:
+      accessModes: [ "ReadWriteOnce" ]
+      resources:
+        requests:
+          storage: 1Gi
+      storageClassName: local-path
 ---
 apiVersion: v1
 kind: Service

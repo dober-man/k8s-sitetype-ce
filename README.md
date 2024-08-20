@@ -1,4 +1,6 @@
-A Site deployed as a pod on a K8s cluster acts as a K8s ingress controller with built-in application security. It also enables the F5® Distributed Cloud Mesh (Mesh) features, such as discovery of services of the K8s cluster, publish of other Site's services on this Site, publish of this Site's discovered services on other Sites, etc.
+A K8s Sitetype CE is a Customer Edge Service deployed as pods on a K8s cluster. This CE can act as a K8s ingress controller with built-in application security. It also enables the F5® Distributed Cloud Mesh (Mesh) features, such as discovery of services of the K8s cluster, publish of other Site's services on this Site or publish of this Site's discovered services on other Sites via an F5 XC Load Balancer.
+
+The F5 XC Load Balancer offers an entire suite of security services providing an easy to consume and globally redundant layered security model while serving content from private K8's clusters.
 
 Reference Doc: https://docs.cloud.f5.com/docs/how-to/site-management/create-k8s-site
 

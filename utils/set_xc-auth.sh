@@ -66,6 +66,13 @@ kubectl config set-context $USERNAME@kubernetes-cluster \
   --user=$USERNAME \
   --kubeconfig=$KUBECONFIG_PATH
 
+
+
+# Grant Cluster Admin (Not Recommended for Production)
+kubectl create clusterrolebinding xc-sd-admin-binding --clusterrole=cluster-admin --user=$USERNAME
+
+#Set Context to XC Service Discovery User
 kubectl config use-context $USERNAME@kubernetes-cluster --kubeconfig=$KUBECONFIG_PATH
+
 
 echo "Kubeconfig file $KUBECONFIG_PATH has been set up with the new client certificate."

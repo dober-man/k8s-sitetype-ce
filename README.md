@@ -134,39 +134,39 @@ Ports: 2379/TCP (client communication), 2380/TCP (peer communication), 65535/TCP
 Role: Provides network endpoints for etcd clients and peers.
 
 etcd-0
-Type: ClusterIP (internal-only service).
+Type: ClusterIP (internal-only service)
 ClusterIP: Yes
-Ports: Same as the etcd service.
+Ports: Same as the etcd service
 Role: This service specifically targets the etcd-0 pod, which is part of the etcd StatefulSet.
 
 prometheus
-Type: ClusterIP.
+Type: ClusterIP
 ClusterIP: Yes
 Port: 32222/TCP
 Role: Provides a stable network endpoint for accessing Prometheus metrics.
 
 prometheus-statsd
-Type: ClusterIP.
+Type: ClusterIP
 ClusterIP: Yes
-Ports: 65341/TCP, 65341/UDP.
+Ports: 65341/TCP, 65341/UDP
 Role: Exposes a statsd exporter for Prometheus, which collects metrics in the statsd format.
 
 pushgateway
-Type: ClusterIP.
+Type: ClusterIP
 ClusterIP: Yes
-Port: 65220/TCP.
+Port: 65220/TCP
 Role: Provides an endpoint for the Prometheus Pushgateway, used to push metrics from short-lived jobs to Prometheus.
 
 ver
-Type: NodePort.
+Type: NodePort
 ClusterIP: Yes
 Ports: Various ports mapped to high NodePort values, enabling external access to the VER component on these ports.
 Role: Exposes the Volterra Edge Router to external networks through specific NodePorts.
 
 vpm
-Type: NodePort.
+Type: NodePort
 ClusterIP: Yes
-Port: 65003/TCP.
+Port: 65003/TCP
 Role: Exposes the Volterra Platform Manager to external networks through a specific NodePort.
 
 Networking Overview:

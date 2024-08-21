@@ -87,6 +87,12 @@ Click Accept on the CE registration request.
 
 <img width="1082" alt="image" src="https://github.com/user-attachments/assets/946e8c9a-cac1-40f9-9f58-2ba08706cf74">
 
+Currently, you will need to static set the software OS version to crt-20231010-2541. This should be addressed in future updates. 
+<img width="885" alt="image" src="https://github.com/user-attachments/assets/695f6e57-324a-43b3-9c70-438499871960">
+
+You will also set the Site to Site Tunnel Type. In this setup we are using SSL. 
+<img width="890" alt="image" src="https://github.com/user-attachments/assets/690be695-166b-4681-bad6-3fd250b3f108">
+
 SET OS VERSION - crt-20231010-2541
 
 Make sure to verify the information and set the tunnel type towards the bottom: 

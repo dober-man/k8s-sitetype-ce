@@ -178,6 +178,34 @@ Headless Service (etcd): The etcd service does not have a ClusterIP and instead 
 NodePort Services (ver, vpm): These services are exposed to external traffic on specific ports of each node's IP address. NodePorts enable external clients to access these services through any of the cluster nodes on a specific port.
 
 
+# Service Discovery
+In the VE CE service discovery lab setup found here: https://github.com/dober-man/ve-ce-secure-k8s-gw we used Kubeconfig as the authentication mechanism for Service Discovery in the K8s cluster. 
+
+In this setup we are going to use the alternate method of TLS Parameters for HTTP REST. 
+
+## TLS Parameters for HTTP REST
+
+Create a Service Discovery.
+
+Multicloud App Connect -> Manage -> Service Discovery -> Add Discovery
+Name: my-sd
+
+Virtual-Site or Site or Network: Site
+
+Reference: - [choose your CE site]
+
+Network Type: Site Local Network
+
+Discovery Method: K8s Discovery Configuration
+
+[SCREENSHOT]
+
+Click on "Configure" under K8S Discovery Configuration
+
+Access credentials:
+Select Kubernetes Credentials: TLS Parameters for HTTP REST
+
+
 
 
 

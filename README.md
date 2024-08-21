@@ -56,8 +56,14 @@ The k8s-install.sh script performs the following tasks:
 * Initializes the Kubernetes cluster
 * Deploys a sample NGINX Pod and exposes it as a NodePort Service. 
 
-### Install the CE in K8s. 
+## Install the CE in K8s. 
 
+### Script Features
+* Automation & Dynamic Configuration: The script version of the YAML introduces automation and dynamic generation based on user inputs (like Cluster Name, Latitude, Longitude, and Token), which simplifies deployment and reduces the chance of manual errors.
+* Storage Class: The addition of a StorageClass for dynamic provisioning ensures that the StatefulSet PVCs are properly bound to volumes in diverse Kubernetes environments.
+* Flexibility: The script allows the user to easily enable additional services via commented-out sections, giving more control over the deployment.
+
+### Script Overview
 The manifest file contains a YAML schema used for descriptor information to support deployment of Kubernetes for a Site. https://gitlab.com/volterra.io/volterra-ce/-/blob/master/k8s/ce_k8s.yml
 
 This manifest is barebones and may not have all the objects required to sucessfully deploy the CE by itself. For example, Persistent volumes. By default the manifest contains static PVCs without a StorageClass, assuming an existing default StorageClass.
@@ -71,12 +77,6 @@ You want to make sure you see the following pods "Running" before proceeding.
 
 <img width="1306" alt="image" src="https://github.com/user-attachments/assets/54eed191-e668-4167-801f-013bdace5a70">
 
-### Script Overview
-* Automation & Dynamic Configuration: The script version of the YAML introduces automation and dynamic generation based on user inputs (like Cluster Name, Latitude, Longitude, and Token), which simplifies deployment and reduces the chance of manual errors.
-* Storage Class: The addition of a StorageClass for dynamic provisioning ensures that the StatefulSet PVCs are properly bound to volumes in diverse Kubernetes environments.
-* Flexibility: The script allows the user to easily enable additional services via commented-out sections, giving more control over the deployment.
-
-<img width="685" alt="image" src="https://github.com/user-attachments/assets/64dbc337-7af1-4247-8310-3f5420cb34cd">
 
 ## XC Console
 Login in to XC Cloud Console and accept the CE registration request.

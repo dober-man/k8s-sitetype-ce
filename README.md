@@ -97,5 +97,88 @@ You will see vp-manager-0 restart and after about 90s etcd will show up
 
 
 
+Pods, Services & Networking Overview
+
+Pods: 
+
+etcd-0 
+Containers: 2
+Role: This pod is part of the etcd cluster, which is the key-value store used by XC Kubernetes to store all cluster data. This is different than the K8s etcd running in the kube-system namespace. 
+
+prometheus
+Containers: 5
+Role: This pod is running Prometheus, a monitoring and alerting toolkit commonly used to gather metrics and monitor the Kubernetes cluster.
+
+ver-0
+Containers: 17
+Role: Volterra Edge Router (VER), a component of F5 Distributed Cloud Services used for networking and security functions.
+
+
+volterra-ce-init-hxgmm
+Containers: 1
+Role: This is an initialization pod for Volterra Control Edge (CE), possibly used to initialize or bootstrap the environment.
+
+vp-manager-0
+Containers: 1
+Role: Volterra Platform Manager (VP Manager), which manages and monitors the overall environment.
+
+Services 
+Services provide a stable network endpoint for a set of Pods and enable the Pods to communicate with each other or with external services. 
+
+Here are the details of the Services in the ves-system namespace:
+
+etcd
+Type: ClusterIP (internal-only service).
+ClusterIP: None (headless service, allowing direct access to individual pods).
+Ports: 2379/TCP (client communication), 2380/TCP (peer communication), 65535/TCP.
+Role: Provides network endpoints for etcd clients and peers.
+
+etcd-0
+Type: ClusterIP (internal-only service).
+ClusterIP: Yes
+Ports: Same as the etcd service.
+Role: This service specifically targets the etcd-0 pod, which is part of the etcd StatefulSet.
+
+prometheus
+Type: ClusterIP.
+ClusterIP: Yes
+Port: 32222/TCP
+Role: Provides a stable network endpoint for accessing Prometheus metrics.
+
+prometheus-statsd
+Type: ClusterIP.
+ClusterIP: Yes
+Ports: 65341/TCP, 65341/UDP.
+Role: Exposes a statsd exporter for Prometheus, which collects metrics in the statsd format.
+
+pushgateway
+Type: ClusterIP.
+ClusterIP: Yes
+Port: 65220/TCP.
+Role: Provides an endpoint for the Prometheus Pushgateway, used to push metrics from short-lived jobs to Prometheus.
+
+ver
+Type: NodePort.
+ClusterIP: Yes
+Ports: Various ports mapped to high NodePort values, enabling external access to the VER component on these ports.
+Role: Exposes the Volterra Edge Router to external networks through specific NodePorts.
+
+vpm
+Type: NodePort.
+ClusterIP: Yes
+Port: 65003/TCP.
+Role: Exposes the Volterra Platform Manager to external networks through a specific NodePort.
+
+Networking Overview:
+
+ClusterIP Services: These are accessible only within the Kubernetes cluster. They are typically used to facilitate internal communication between services and pods.
+
+Headless Service (etcd): The etcd service does not have a ClusterIP and instead directly resolves to the individual pod IPs of the StatefulSet, enabling clients to interact with each pod directly.
+
+NodePort Services (ver, vpm): These services are exposed to external traffic on specific ports of each node's IP address. NodePorts enable external clients to access these services through any of the cluster nodes on a specific port.
+
+
+
+
 
 

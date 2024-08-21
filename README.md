@@ -93,13 +93,9 @@ Currently, you will need to static set the software OS version to crt-20231010-2
 You will also set the Site to Site Tunnel Type. In this setup we are using SSL. 
 <img width="890" alt="image" src="https://github.com/user-attachments/assets/690be695-166b-4681-bad6-3fd250b3f108">
 
-SET OS VERSION - crt-20231010-2541
 
-Make sure to verify the information and set the tunnel type towards the bottom: 
 
-<img width="982" alt="image" src="https://github.com/user-attachments/assets/ccd82f80-aa0f-48e3-b4da-773b52c97475">
-
-Click on "Sites" from the left Nav menu. Note the status of your CE cluster. It could take some time for provisioning to complete. 
+Click "Save and Exit" to accept the registration request and then click on "Sites" from the left Nav menu. Note the status of your CE cluster. It could take some time for provisioning to complete. 
 
 <img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
 

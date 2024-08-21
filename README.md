@@ -29,7 +29,7 @@ XC Console - (You will need owner/admin access to a tenant)
 ### HugePages 
 A feature of the Linux kernel. Verify node support by running: grep HugePages /proc/meminfo
 
-### Kubectl or Helm chart deployment?
+### Kubectl or Helm chart CE deployment?
 Both are supported. This lab is built using the kubectl method. The Helm chart install method is covered here: https://docs.cloud.f5.com/docs/how-to/site-management/create-k8s-site
 
 # XC Console 

@@ -65,6 +65,11 @@ This manifest is barebones and may not have all the objects required to sucessfu
 The ce-k8s-install.sh script specifies a local-path StorageClass for dynamic storage provisioning, ensuring compatibility with environments where default storage classes may not be present.
 
 From the $HOME directory on the K8s master server run the ce-k8s-install.sh script and provide the user-input variables. 
+As the script completes it will suggest running: watch kubectl get pods -n ves-system -o=wide
+
+You want to make sure you see the following pods "Running" before proceeding. 
+
+<img width="1306" alt="image" src="https://github.com/user-attachments/assets/54eed191-e668-4167-801f-013bdace5a70">
 
 ### Script Overview
 * Automation & Dynamic Configuration: The script version of the YAML introduces automation and dynamic generation based on user inputs (like Cluster Name, Latitude, Longitude, and Token), which simplifies deployment and reduces the chance of manual errors.

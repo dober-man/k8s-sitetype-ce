@@ -114,47 +114,69 @@ Pods, Services & Networking Overview
 Pods: 
 
 etcd-0 
+<br>
 Containers: 2
+<br>
 Role: This pod is part of the etcd cluster, which is the key-value store used by XC Kubernetes to store all cluster data. This is different than the K8s etcd running in the kube-system namespace. 
 
 prometheus
+<br>
 Containers: 5
+<br>
 Role: This pod is running Prometheus, a monitoring and alerting toolkit commonly used to gather metrics and monitor the Kubernetes cluster.
 
 ver-0
+<br>
 Containers: 17
+<br>
 Role: Volterra Edge Router (VER), a component of F5 Distributed Cloud Services used for networking and security functions.
 
 
 volterra-ce-init-hxgmm
+<br>
 Containers: 1
+<br>
 Role: This is an initialization pod for Volterra Control Edge (CE), possibly used to initialize or bootstrap the environment.
 
 vp-manager-0
+<br>
 Containers: 1
+<br>
 Role: Volterra Platform Manager (VP Manager), which manages and monitors the overall environment.
 
-Services 
+### Services 
+<br>
 Services provide a stable network endpoint for a set of Pods and enable the Pods to communicate with each other or with external services. 
 
 Here are the details of the Services in the ves-system namespace:
 
 etcd
 Type: ClusterIP (internal-only service).
+<br>
 ClusterIP: None (headless service, allowing direct access to individual pods).
+<br>
 Ports: 2379/TCP (client communication), 2380/TCP (peer communication), 65535/TCP.
+<br>
 Role: Provides network endpoints for etcd clients and peers.
 
 etcd-0
+<br>
 Type: ClusterIP (internal-only service)
+<br>
 ClusterIP: Yes
+<br>
 Ports: Same as the etcd service
+<br>
 Role: This service specifically targets the etcd-0 pod, which is part of the etcd StatefulSet.
 
 prometheus
+<br>
 Type: ClusterIP
+<br>
 ClusterIP: Yes
+<br>
 Port: 32222/TCP
+<br>
 Role: Provides a stable network endpoint for accessing Prometheus metrics.
 
 prometheus-statsd

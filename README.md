@@ -99,7 +99,9 @@ Click "Save and Exit" to accept the registration request and then click on "Site
 
 <img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
 
-You will see vp-manager-0 restart and after about 90s etcd will show up
+Keep an eye on: watch kubectl get pods -n ves-system -o=wide
+You should see vp-manager-0 go through several statuses. 
+After a minute or two, you will see vp-manager-0 restart and eventually the etcd pod will show up followed by prometheus and ver-0 pods. 
 <img width="611" alt="image" src="https://github.com/user-attachments/assets/785887d9-da6a-42eb-8b05-57fdc2b3c238">
 
 

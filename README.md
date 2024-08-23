@@ -219,25 +219,34 @@ In this setup we are going to use the alternate method of TLS Parameters for HTT
 
 ## TLS Parameters for HTTP REST
 
-Create a Service Discovery.
+### Create a Service Discovery.
 
 Multicloud App Connect -> Manage -> Service Discovery -> Add Discovery
+
 Name: my-sd
 
 Virtual-Site or Site or Network: Site
-
 Reference: - [choose your CE site]
 
 Network Type: Site Local Network
-
 Discovery Method: K8s Discovery Configuration
 
-[SCREENSHOT]
+<img width="925" alt="image" src="https://github.com/user-attachments/assets/04db4a77-9287-4594-a8fc-71071be07100">
+
 
 Click on "Configure" under K8S Discovery Configuration
 
 Access credentials:
 Select Kubernetes Credentials: TLS Parameters for HTTP REST
+
+API Server and Port: [choose your k8s master-node ip]:6443
+TLS Parameters: [Configure]
+<img width="888" alt="image" src="https://github.com/user-attachments/assets/ed0e5fe0-ac32-41a5-9a8e-2e8fbc79ed4e">
+
+## set_xc_auth script
+
+
+
 
 
 

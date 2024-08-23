@@ -215,7 +215,7 @@ NodePort Services (ver, vpm): These services are exposed to external traffic on 
 # Service Discovery
 In the VE CE service discovery lab setup found here: https://github.com/dober-man/ve-ce-secure-k8s-gw we used Kubeconfig as the authentication mechanism for Service Discovery in the K8s cluster. 
 
-In this setup we are going to use the alternate method of TLS Parameters for HTTP REST. 
+In this setup we are going to use the alternate method of TLS Parameters for HTTP REST to provide an example of that method. 
 
 ## TLS Parameters for HTTP REST
 

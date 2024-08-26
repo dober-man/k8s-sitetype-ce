@@ -359,6 +359,18 @@ else
   exit 1
 fi
 
+# Add systemd drop-in configuration for HugePages allocation
+cat <<EOF | sudo tee /etc/systemd/system/kubelet.service.d/20-hugepages.conf
+[Service]
+Environment="KUBELET_EXTRA_ARGS=--feature-gates=HugePageStorageMediumSize=2Mi --kube-reserved=cpu=200m,memory=1Gi,ephemeral-storage=1Gi,hugepages-2Mi=64Mi"
+EOF
+
+# Reload systemd and restart kubelet to apply HugePages configuration
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+echo "HugePages configuration applied and kubelet restarted."
+
 echo "Verify that the pod with the vp-manager-0 under the NAME column indicates that the Site pod was created."
 
 echo "Run: watch kubectl get pods -n ves-system -o=wide"

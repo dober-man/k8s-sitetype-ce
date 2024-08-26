@@ -10,7 +10,7 @@ Reference Doc: https://docs.cloud.f5.com/docs/how-to/site-management/create-k8s-
 3.  Publish and secure service to public
 
 # Features
-* Automated Installation: The scripts install a Kubernetes cluster and configure the cluster for CE services with minimal user intervention. 
+* Automated Installation: The scripts install a Kubernetes cluster, configure the cluster for CE services and setup of Auth with minimal user intervention. 
 * Customizable Options: Users can define custom settings for the installation, ensuring the setup meets their specific requirements.
 
 ## Prerequisite

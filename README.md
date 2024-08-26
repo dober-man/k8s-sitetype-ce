@@ -259,9 +259,9 @@ API Server and Port: [choose your k8s master-node ip]:6443<br>
 TLS Parameters: [Configure]<br>
 <img width="888" alt="image" src="https://github.com/user-attachments/assets/ed0e5fe0-ac32-41a5-9a8e-2e8fbc79ed4e">
 
-## set_xc_auth script
+## You will be able to configure these settings based on the set_xc_auth script output you are about to run. 
 
-Copy this script to the $HOME directory, give it executable perms and run it. 
+Copy the set_xc_auth script to the $HOME directory, give it +x perms and run it. 
 
 This script is useful for setting up a new Kubernetes user with certificate-based authentication, configuring their kubeconfig file, and granting them administrative access to the cluster. Here's a brief overview of its main functionality:
 

@@ -252,11 +252,11 @@ Discovery Method: K8s Discovery Configuration
 
 Click on "Configure" under K8S Discovery Configuration
 
-Access credentials:
+Access credentials:<br>
 Select Kubernetes Credentials: TLS Parameters for HTTP REST
 
-API Server and Port: [choose your k8s master-node ip]:6443
-TLS Parameters: [Configure]
+API Server and Port: [choose your k8s master-node ip]:6443<br>
+TLS Parameters: [Configure]<br>
 <img width="888" alt="image" src="https://github.com/user-attachments/assets/ed0e5fe0-ac32-41a5-9a8e-2e8fbc79ed4e">
 
 ## set_xc_auth script

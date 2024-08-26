@@ -69,7 +69,8 @@ This manifest is barebones and may not have all the objects required to sucessfu
 
 The ce-k8s-install.sh script specifies a local-path StorageClass for dynamic storage provisioning, ensuring compatibility with environments where default storage classes may not be present.
 
-From the $HOME directory on the K8s master server run the ce-k8s-install.sh script and provide the user-input variables. 
+From the $HOME directory on the K8s master server run the ce-k8s-install.sh script and provide the user-input variables. Don't foget to give the script +x permissions. 
+
 As the script completes it will suggest running: watch kubectl get pods -n ves-system -o=wide
 
 You want to make sure you see the following pods "Running" before proceeding. 
@@ -92,23 +93,21 @@ Currently, you will need to static set the software OS version to crt-20231010-2
 You will also set the Site to Site Tunnel Type. In this setup we are using SSL. 
 <img width="890" alt="image" src="https://github.com/user-attachments/assets/690be695-166b-4681-bad6-3fd250b3f108">
 
-
-
 Click "Save and Exit" to accept the registration request and then click on "Sites" from the left Nav menu. Note the status of your CE cluster. It could take some time for provisioning to complete. 
 
 <img width="1164" alt="image" src="https://github.com/user-attachments/assets/9409dc00-019a-4eaa-8d03-274039c1553d">
 
 Keep an eye on: watch kubectl get pods -n ves-system -o=wide
 
-You should see vp-manager-0 go through several statuses. 
+You should see vp-manager-0 go through several status updates. 
 
-After a minute or two, you will see vp-manager-0 restart and eventually the etcd pod will show up followed by prometheus and ver-0 pods. 
+After accepting the registration in XC Console, from the CLI you will see vp-manager-0 restart and eventually the etcd pod will show up followed by prometheus and ver-0 pods. 
 
 <img width="1301" alt="image" src="https://github.com/user-attachments/assets/cee5b782-957c-4560-9c8a-0610ec4d9a1e">
 
 Please wait until all pods are "Running" before moving to the next step. 
 
-Pods, Services & Networking Overview
+### Pods, Services & Networking Overview
 
 Pods: 
 

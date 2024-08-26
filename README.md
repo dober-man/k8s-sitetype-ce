@@ -180,55 +180,73 @@ Port: 32222/TCP
 Role: Provides a stable network endpoint for accessing Prometheus metrics.
 
 prometheus-statsd
+<br>
 Type: ClusterIP
+<br>
 ClusterIP: Yes
+<br>
 Ports: 65341/TCP, 65341/UDP
+<br>
 Role: Exposes a statsd exporter for Prometheus, which collects metrics in the statsd format.
 
 pushgateway
+<br>
 Type: ClusterIP
+<br>
 ClusterIP: Yes
+<br>
 Port: 65220/TCP
+<br>
 Role: Provides an endpoint for the Prometheus Pushgateway, used to push metrics from short-lived jobs to Prometheus.
 
 ver
+<br>
 Type: NodePort
+<br>
 ClusterIP: Yes
+<br>
 Ports: Various ports mapped to high NodePort values, enabling external access to the VER component on these ports.
+<br>
 Role: Exposes the Volterra Edge Router to external networks through specific NodePorts.
 
 vpm
+<br>
 Type: NodePort
+<br>
 ClusterIP: Yes
+<br>
 Port: 65003/TCP
+<br>
 Role: Exposes the Volterra Platform Manager to external networks through a specific NodePort.
 
-Networking Overview:
+## Networking Overview:
 
-ClusterIP Services: These are accessible only within the Kubernetes cluster. They are typically used to facilitate internal communication between services and pods.
+* ClusterIP Services: These are accessible only within the Kubernetes cluster. They are typically used to facilitate internal communication between services and pods.
 
-Headless Service (etcd): The etcd service does not have a ClusterIP and instead directly resolves to the individual pod IPs of the StatefulSet, enabling clients to interact with each pod directly.
+* Headless Service (etcd): The etcd service does not have a ClusterIP and instead directly resolves to the individual pod IPs of the StatefulSet, enabling clients to interact with each pod directly.
 
-NodePort Services (ver, vpm): These services are exposed to external traffic on specific ports of each node's IP address. NodePorts enable external clients to access these services through any of the cluster nodes on a specific port.
+* NodePort Services (ver, vpm): These services are exposed to external traffic on specific ports of each node's IP address. NodePorts enable external clients to access these services through any of the cluster nodes on a specific port.
 
 
-# Service Discovery
+## Service Discovery
 In the VE CE service discovery lab setup found here: https://github.com/dober-man/ve-ce-secure-k8s-gw we used Kubeconfig as the authentication mechanism for Service Discovery in the K8s cluster. 
 
 In this setup we are going to use the alternate method of TLS Parameters for HTTP REST to provide an example of that method. 
 
 ## TLS Parameters for HTTP REST
 
-### Create a Service Discovery.
+### Create a Service Discovery
 
 Multicloud App Connect -> Manage -> Service Discovery -> Add Discovery
 
 Name: my-sd
 
 Virtual-Site or Site or Network: Site
+<br>
 Reference: - [choose your CE site]
 
 Network Type: Site Local Network
+<br>
 Discovery Method: K8s Discovery Configuration
 
 <img width="925" alt="image" src="https://github.com/user-attachments/assets/04db4a77-9287-4594-a8fc-71071be07100">
@@ -249,10 +267,12 @@ Copy this script to the $HOME directory, give it executable perms and run it.
 
 This script is useful for setting up a new Kubernetes user with certificate-based authentication, configuring their kubeconfig file, and granting them administrative access to the cluster. Here's a brief overview of its main functionality:
 
-User Prompts:
+### User Prompts:
 
 The script begins by prompting the user to enter a desired username (which will be used as the Common Name in the certificate) and the path for the kubeconfig file (defaulting to ~/.kube/config).
-Directory Setup:
+
+
+### Directory Setup:
 
 It defines a destination directory (~/certs) where the generated certificates and keys will be stored, and creates this directory if it doesn't already exist.
 Certificate Authority (CA) Certificate:
@@ -270,13 +290,15 @@ The script signs the CSR using the Kubernetes CA to create a client certificate 
 Verification:
 
 It lists the generated files and verifies the contents of both the CA certificate and the client certificate by displaying their details.
-Kubeconfig Setup:
+
+### Kubeconfig Setup:
 
 The script configures the kubeconfig file at the specified path by setting the cluster, user credentials, and context using the generated certificates and keys. It points the kubeconfig file to the Kubernetes API server (https://master-node:6443).
-Cluster Role Binding:
 
+## Cluster Role Binding:
 It creates a ClusterRoleBinding, granting the user cluster-admin privileges (Note: this is generally not recommended for production environments due to security concerns).
-Context Configuration:
+
+## Context Configuration:
 
 The script sets the context in the kubeconfig file to use the newly created user and cluster.
 Final Output:

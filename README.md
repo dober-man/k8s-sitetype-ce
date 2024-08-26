@@ -61,10 +61,9 @@ The k8s-install.sh script performs the following tasks:
 ### Script Features
 * Automation & Dynamic Configuration: The script version of the YAML introduces automation and dynamic generation based on user inputs (like Cluster Name, Latitude, Longitude, and Token), which simplifies deployment and reduces the chance of manual errors.
 * Storage Class: The addition of a StorageClass for dynamic provisioning ensures that the StatefulSet PVCs are properly bound to volumes in diverse Kubernetes environments.
-* Flexibility: The script allows the user to easily enable additional services via commented-out sections, giving more control over the deployment.
 
 ### Script Overview
-The manifest file contains a YAML schema used for descriptor information to support deployment of Kubernetes for a Site. https://gitlab.com/volterra.io/volterra-ce/-/blob/master/k8s/ce_k8s.yml
+The manifest file necessary to deply a K8s sitetype CE contains a YAML schema used for descriptor information to support deployment of Kubernetes for a Site. https://gitlab.com/volterra.io/volterra-ce/-/blob/master/k8s/ce_k8s.yml
 
 This manifest is barebones and may not have all the objects required to sucessfully deploy the CE by itself. For example, Persistent volumes. By default the manifest contains static PVCs without a StorageClass, assuming an existing default StorageClass.
 

@@ -303,7 +303,91 @@ The script sets the context in the kubeconfig file to use the newly created user
 #### Final Output:
 
 The script confirms that the kubeconfig file has been successfully set up with the new client certificate.
+The output will be in the $HOME/certs folder. 
 
+<img width="397" alt="image" src="https://github.com/user-attachments/assets/82d5556d-498e-4e3e-8e4e-6e34eb11c426">
+
+### Return to XC Console and enter your TLS Server parameters
+<br>
+Note: For this setup we will leave the SNI blank.
+Copy the appropriate data from the CA and client cert and key files from the $HOME/certs directory. 
+
+<img width="986" alt="image" src="https://github.com/user-attachments/assets/29c7f824-238c-4f75-b664-71091a861c00">
+
+The client private key will be blindfolded. More info here: https://docs.cloud.f5.com/docs-v2/multi-cloud-network-connect/how-to/adv-security/blindfold-tls-certs
+
+<img width="772" alt="image" src="https://github.com/user-attachments/assets/7a818da5-91e8-4849-9ff0-5d12aea3f527">
+
+Click "Apply" 
+<img width="1190" alt="image" src="https://github.com/user-attachments/assets/d199c3b1-1340-4159-904d-91f9b6e3b833">
+
+Save and Exit
+<img width="1180" alt="image" src="https://github.com/user-attachments/assets/63737700-67e6-4e0a-968a-dec804187765">
+
+
+Hit "Refresh" in XC Console and you should see 1 discovered service. 
+<img width="1067" alt="image" src="https://github.com/user-attachments/assets/3cf3660c-463c-4cba-8246-711c5a6cb007">
+
+## Deploy a Second Service in K8s (optional but demonstrates how quickly SD works on the XC side....instant)
+kubectl create deployment nginx2 --image=nginxdemos/hello
+kubectl expose deployment nginx2 --port=81 --target-port=81 --type=NodePort
+
+Hit "Refresh" in XC Console and you should now see 2 discovered services. 
+<img width="1271" alt="image" src="https://github.com/user-attachments/assets/2c85e4e4-3440-4ee6-8f81-7edb591aa6b6">
+
+Click on the Service Hyperlink and note the service names for the services. These will be referenced in the origin pool when we publish this service. 
+
+# Publish the service
+
+## Create Origin Objects
+
+Create Origin Servers and Pool with Discovered Service: 
+
+#### Multicloud App Connect -> Manage -> Load Balancers -> Origin Pools -> Add Origin Pool 
+
+Define the Origin Servers (click Add Item) and use the screenshot to fill in the config. 
+<img width="1206" alt="image" src="https://github.com/user-attachments/assets/8010b034-f8b9-44c3-b6f8-8de6353b6c8b">
+
+Define the Pool Definitions as shown in the screenshot. 
+<img width="885" alt="image" src="https://github.com/user-attachments/assets/e9bfc1ed-2f3c-4e0a-9018-daa19b338122">
+<img width="900" alt="image" src="https://github.com/user-attachments/assets/02710b3b-80cf-4c64-8de3-edb82997b6b4">
+
+
+Note: You must specify port 80 for the origin pool (even though it is technically dynamic at the Node/pod level). Remember all traffic being sent between the XC cloud and CE is natively encrypted so this is all tunneled until the last hop to the pod. In our test scenario it will look like this: User-->80-->VIP-->443-->CE-->80--Origin Pool --> (Nodeport).  
+
+## Load Balancer
+
+Create http load balancer:
+
+#### Multicloud App Connect -> Manage -> Load Balancers -> http load balancer
+
+Use the screenshot to configure the load balancer: 
+
+<img width="886" alt="image" src="https://github.com/user-attachments/assets/da37c504-5f87-40ee-8725-1ec4024457c0">
+
+
+For the WAF policy - Create a new policy called "blocking-policy", put it in blocking mode and take all defaults
+
+<img width="889" alt="image" src="https://github.com/user-attachments/assets/aca0998a-78ce-40e6-b9de-f9981e3189c3">
+
+For everything below the WAF policy, take all the defaults but note all of the other layered security features can be added.
+
+Click "Save and Exit" 
+
+Click the "Actions buttons" under load balancer name and go to "Manage Configuration".
+<img width="1088" alt="image" src="https://github.com/user-attachments/assets/341f5cd7-29a7-48b0-80a3-21eb77681ee4">
+
+Click the JSON tab and note your IP address. 
+<img width="874" alt="image" src="https://github.com/user-attachments/assets/6c883512-8225-48b0-8cd3-6f4f02c04e8c">
+
+On your local/test machine create a host file entry pointing nginx.example.com to that IP address and test your access to http://nginx.example.com.
+
+<img width="776" alt="image" src="https://github.com/user-attachments/assets/bcfa83a9-0308-4921-9fa8-3e66924c9d73">
+
+## Verify the WAF
+run http://nginx.example.com/<script>
+
+<img width="673" alt="image" src="https://github.com/user-attachments/assets/c6fad06f-be4e-4bd2-8742-b45cb989130f">
 
 
 

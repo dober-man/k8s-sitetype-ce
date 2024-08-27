@@ -270,36 +270,37 @@ This script is useful for setting up a new Kubernetes user with certificate-base
 The script begins by prompting the user to enter a desired username (which will be used as the Common Name in the certificate) and the path for the kubeconfig file (defaulting to ~/.kube/config).
 
 
-### Directory Setup:
-
+#### Directory Setup:
 It defines a destination directory (~/certs) where the generated certificates and keys will be stored, and creates this directory if it doesn't already exist.
-Certificate Authority (CA) Certificate:
 
+#### Certificate Authority (CA) Certificate:
 The script copies the Kubernetes CA certificate (ca.crt) from /etc/kubernetes/pki/ to the destination directory.
-Private Key Generation:
 
+#### Private Key Generation:
 A new private key (client.key) is generated using OpenSSL and saved in the destination directory.
-Certificate Signing Request (CSR):
 
+#### Certificate Signing Request (CSR):
 A CSR (client.csr) is generated using the private key, with the subject set to the entered username.
-Client Certificate Generation:
 
+#### Client Certificate Generation:
 The script signs the CSR using the Kubernetes CA to create a client certificate (client.crt), which is valid for 365 days.
-Verification:
+
+#### Verification:
 
 It lists the generated files and verifies the contents of both the CA certificate and the client certificate by displaying their details.
 
-### Kubeconfig Setup:
+#### Kubeconfig Setup:
 
 The script configures the kubeconfig file at the specified path by setting the cluster, user credentials, and context using the generated certificates and keys. It points the kubeconfig file to the Kubernetes API server (https://master-node:6443).
 
-## Cluster Role Binding:
+####  Cluster Role Binding:
 It creates a ClusterRoleBinding, granting the user cluster-admin privileges (Note: this is generally not recommended for production environments due to security concerns).
 
-## Context Configuration:
+#### Context Configuration:
 
 The script sets the context in the kubeconfig file to use the newly created user and cluster.
-Final Output:
+
+#### Final Output:
 
 The script confirms that the kubeconfig file has been successfully set up with the new client certificate.
 

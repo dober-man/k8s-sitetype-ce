@@ -335,9 +335,11 @@ kubectl create deployment nginx2 --image=nginxdemos/hello <br>
 kubectl expose deployment nginx2 --port=81 --target-port=81 --type=NodePort
 
 Hit "Refresh" in XC Console and you should now see 2 discovered services. 
-<img width="1271" alt="image" src="https://github.com/user-attachments/assets/2c85e4e4-3440-4ee6-8f81-7edb591aa6b6">
+<img width="743" alt="image" src="https://github.com/user-attachments/assets/74bcf84e-969d-4d4d-be04-c73250b175d8">
 
 Click on the Service Hyperlink and note the service names for the services. These will be referenced in the origin pool when we publish this service. 
+
+<img width="1271" alt="image" src="https://github.com/user-attachments/assets/2c85e4e4-3440-4ee6-8f81-7edb591aa6b6">
 
 # Publish the service
 

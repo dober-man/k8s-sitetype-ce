@@ -331,7 +331,7 @@ Hit "Refresh" in XC Console and you should see 1 discovered service.
 <img width="1067" alt="image" src="https://github.com/user-attachments/assets/3cf3660c-463c-4cba-8246-711c5a6cb007">
 
 ## Deploy a Second Service in K8s (optional but demonstrates how quickly SD works on the XC side....instant)
-kubectl create deployment nginx2 --image=nginxdemos/hello
+kubectl create deployment nginx2 --image=nginxdemos/hello <br>
 kubectl expose deployment nginx2 --port=81 --target-port=81 --type=NodePort
 
 Hit "Refresh" in XC Console and you should now see 2 discovered services. 

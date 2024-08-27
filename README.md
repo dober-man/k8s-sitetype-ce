@@ -319,9 +319,11 @@ The client private key will be blindfolded. More info here: https://docs.cloud.f
 <img width="772" alt="image" src="https://github.com/user-attachments/assets/7a818da5-91e8-4849-9ff0-5d12aea3f527">
 
 Click "Apply" 
+
 <img width="912" alt="image" src="https://github.com/user-attachments/assets/fc0bf24e-1b11-42de-a6e9-c6ca9cd34ae1">
 
 Save and Exit
+
 <img width="1180" alt="image" src="https://github.com/user-attachments/assets/63737700-67e6-4e0a-968a-dec804187765">
 
 

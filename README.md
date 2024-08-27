@@ -330,14 +330,14 @@ Save and Exit
 Hit "Refresh" in XC Console and you should see 1 discovered service. 
 <img width="1067" alt="image" src="https://github.com/user-attachments/assets/3cf3660c-463c-4cba-8246-711c5a6cb007">
 
-## Deploy a Second Service in K8s (optional but demonstrates how quickly SD works on the XC side....instant)
+## Deploy a Second Service in K8s 
 kubectl create deployment nginx2 --image=nginxdemos/hello <br>
 kubectl expose deployment nginx2 --port=81 --target-port=81 --type=NodePort
 
-Hit "Refresh" in XC Console and you should now see 2 discovered services. 
+Hit "Refresh" in XC Console and you should now see 2 discovered services. That was fast and easy right?
 <img width="743" alt="image" src="https://github.com/user-attachments/assets/74bcf84e-969d-4d4d-be04-c73250b175d8">
 
-Click on the Service Hyperlink and note the service names for the services. These will be referenced in the origin pool when we publish this service. 
+Click on the Service Hyperlink and note the service names for the services. These will be referenced in the origin pool when we publish via the load balancer.
 
 <img width="1271" alt="image" src="https://github.com/user-attachments/assets/2c85e4e4-3440-4ee6-8f81-7edb591aa6b6">
 
@@ -350,14 +350,19 @@ Create Origin Servers and Pool with Discovered Service:
 #### Multicloud App Connect -> Manage -> Load Balancers -> Origin Pools -> Add Origin Pool 
 
 Define the Origin Servers (click Add Item) and use the screenshot to fill in the config. 
-<img width="1206" alt="image" src="https://github.com/user-attachments/assets/8010b034-f8b9-44c3-b6f8-8de6353b6c8b">
+<img width="1169" alt="image" src="https://github.com/user-attachments/assets/c9cf3a89-60a5-4d9b-9354-5cb67d1b7750">
+
+
 
 Define the Pool Definitions as shown in the screenshot. 
-<img width="885" alt="image" src="https://github.com/user-attachments/assets/e9bfc1ed-2f3c-4e0a-9018-daa19b338122">
-<img width="900" alt="image" src="https://github.com/user-attachments/assets/02710b3b-80cf-4c64-8de3-edb82997b6b4">
+<img width="889" alt="image" src="https://github.com/user-attachments/assets/9ef942f1-ee26-4876-a751-c992c140adfb">
 
 
 Note: You must specify port 80 for the origin pool (even though it is technically dynamic at the Node/pod level). Remember all traffic being sent between the XC cloud and CE is natively encrypted so this is all tunneled until the last hop to the pod. In our test scenario it will look like this: User-->80-->VIP-->443-->CE-->80--Origin Pool --> (Nodeport).  
+
+
+
+
 
 ## Load Balancer
 

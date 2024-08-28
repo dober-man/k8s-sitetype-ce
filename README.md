@@ -332,37 +332,44 @@ Hit "Refresh" in XC Console and you should see 1 discovered service.
 
 ## Deploy a Second Service in K8s 
 kubectl create deployment nginx2 --image=nginxdemos/hello <br>
-kubectl expose deployment nginx2 --port=81 --target-port=81 --type=NodePort
+kubectl expose deployment nginx2 --port=80 --target-port=80 --type=NodePort
 
 Hit "Refresh" in XC Console and you should now see 2 discovered services. That was fast and easy right?
 <img width="743" alt="image" src="https://github.com/user-attachments/assets/74bcf84e-969d-4d4d-be04-c73250b175d8">
 
-Click on the Service Hyperlink and note the service names for the services. These will be referenced in the origin pool when we publish via the load balancer.
+Click on the Service Hyperlink and note the service names for the services. These will be referenced in the origin pool.
 
 <img width="1271" alt="image" src="https://github.com/user-attachments/assets/2c85e4e4-3440-4ee6-8f81-7edb591aa6b6">
 
-# Publish the service
+# Publishing the service
 
-## Create Origin Objects
+## Create Origin Objects (Origin Pool with Discovered Services)
 
-Create Origin Servers and Pools with Discovered Service: 
-
+In XC Console:
+<br>
 #### Multicloud App Connect -> Manage -> Load Balancers -> Origin Pools -> Add Origin Pool 
 
 Define the Origin Servers (click Add Item) and use the screenshot to fill in the config. 
-<img width="1169" alt="image" src="https://github.com/user-attachments/assets/c9cf3a89-60a5-4d9b-9354-5cb67d1b7750">
+
+nginx.default
+<img width="870" alt="image" src="https://github.com/user-attachments/assets/2c8bda55-73b5-41ad-a422-88b01a628dc2">
 
 
+nginx2.default
+<img width="868" alt="image" src="https://github.com/user-attachments/assets/ad457121-16a4-4c5f-af51-85120937a029">
 
 Define the Pool Definitions as shown in the screenshot. 
-<img width="889" alt="image" src="https://github.com/user-attachments/assets/9ef942f1-ee26-4876-a751-c992c140adfb">
+<img width="876" alt="image" src="https://github.com/user-attachments/assets/f6320283-2073-4a22-8c59-0ef7455fd1a8">
 
+Define a basic http health check. This will be used by the K8s sitetype CE to establish moitoring for service availability to the discovered K8s services. 
 
-#### For all other settings take the defaults. 
+<img width="869" alt="image" src="https://github.com/user-attachments/assets/38ac3a42-5ca5-45a4-9c1a-71a408b14213">
 
+<img width="871" alt="image" src="https://github.com/user-attachments/assets/a4c2daf8-a098-49ca-b272-93f1221253ea">
 
-
-
+#### For all remaining settings take the defaults. 
+The final Origin Pool config should look like this:<br>
+<img width="721" alt="image" src="https://github.com/user-attachments/assets/ff992075-78f8-41f5-a7a2-9bd6edc89ab8">
 
 ## Load Balancer
 
@@ -370,16 +377,14 @@ Create http load balancer:
 
 #### Multicloud App Connect -> Manage -> Load Balancers -> http load balancer
 
-Use the screenshot to configure the load balancer: 
+Use the screenshot below to configure the load balancer. For the WAF policy - Create a new policy called "blocking-policy", put it in blocking mode and take all defaults
 
-<img width="886" alt="image" src="https://github.com/user-attachments/assets/da37c504-5f87-40ee-8725-1ec4024457c0">
-
-
-For the WAF policy - Create a new policy called "blocking-policy", put it in blocking mode and take all defaults
+<img width="832" alt="image" src="https://github.com/user-attachments/assets/de8c4ce9-a02e-4553-98b9-ac72744847a2">
+<img width="831" alt="image" src="https://github.com/user-attachments/assets/fe9678da-381d-4d8d-97dd-1654a7f7422a">
 
 <img width="889" alt="image" src="https://github.com/user-attachments/assets/aca0998a-78ce-40e6-b9de-f9981e3189c3">
 
-For everything below the WAF policy, take all the defaults but note all of the other layered security features can be added.
+For the remaining load balancing config below the WAF policy, take all the defaults, but note all of the other layered security features that can be added.
 
 Click "Save and Exit" 
 

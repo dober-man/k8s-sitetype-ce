@@ -345,7 +345,7 @@ Click on the Service Hyperlink and note the service names for the services. Thes
 
 ## Create Origin Objects
 
-Create Origin Servers and Pool with Discovered Service: 
+Create Origin Servers and Pools with Discovered Service: 
 
 #### Multicloud App Connect -> Manage -> Load Balancers -> Origin Pools -> Add Origin Pool 
 
@@ -358,7 +358,6 @@ Define the Pool Definitions as shown in the screenshot.
 <img width="889" alt="image" src="https://github.com/user-attachments/assets/9ef942f1-ee26-4876-a751-c992c140adfb">
 
 
-Note: You must specify port 80 for the origin pool (even though it is technically dynamic at the Node/pod level). Remember all traffic being sent between the XC cloud and CE is natively encrypted so this is all tunneled until the last hop to the pod. In our test scenario it will look like this: User-->80-->VIP-->443-->CE-->80--Origin Pool --> (Nodeport).  <br>
 #### For all other settings take the defaults. 
 
 

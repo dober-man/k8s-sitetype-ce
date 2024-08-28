@@ -395,11 +395,20 @@ Click the JSON tab and note your IP address.
 <img width="874" alt="image" src="https://github.com/user-attachments/assets/6c883512-8225-48b0-8cd3-6f4f02c04e8c">
 
 On your local/test machine create a host file entry pointing nginx.example.com to that IP address and test your access to http://nginx.example.com.
+Refresh the page a few times and you should see traffic hitting both services in the pool. 
 
-<img width="776" alt="image" src="https://github.com/user-attachments/assets/bcfa83a9-0308-4921-9fa8-3e66924c9d73">
+<img width="723" alt="image" src="https://github.com/user-attachments/assets/ebaefd43-a228-4bee-aafa-ff073c1b184e">
+
+
+<img width="749" alt="image" src="https://github.com/user-attachments/assets/ef0536e7-d810-44eb-9bb3-ff599d6558df">
+
 
 ## Verify the WAF
-run http://nginx.example.com/<script>
+In the browser try these URI's: <br>
+http://nginx.example.com/<script><br>
+http://nginx.example.com/?cmd=cat%20/etc/passwd<br>
+http://nginx.example.com/product?id=4%20OR%201=1<br>
+http://nginx.example.com/cart?search=aaa’><script>prompt(‘Please+enter+your+password’);</script><br>
 
 <img width="673" alt="image" src="https://github.com/user-attachments/assets/c6fad06f-be4e-4bd2-8742-b45cb989130f">
 

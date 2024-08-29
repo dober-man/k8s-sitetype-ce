@@ -69,7 +69,7 @@ This manifest is barebones and may not have all the objects required to sucessfu
 
 The ce-k8s-install.sh script specifies a local-path StorageClass for dynamic storage provisioning, ensuring compatibility with environments where default storage classes may not be present.
 
-From the $HOME directory on the K8s master server run the ce-k8s-install.sh script and provide the user-input variables. Don't foget to give the script +x permissions. 
+From the $HOME directory on the K8s master server run the ce-k8s-install.sh script and provide the user-input variables. Don't forget to give the script +x permissions. 
 
 As the script completes it will suggest running: watch kubectl get pods -n ves-system -o=wide
 

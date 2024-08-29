@@ -10,6 +10,14 @@ validate_number() {
   fi
 }
 
+# Function to validate non-empty string
+validate_non_empty() {
+  if [[ -z "$1" ]]; then
+    echo "Error: $2 cannot be empty."
+    exit 1
+  fi
+}
+
 # Prompt user for input
 read -p "Enter an arbitrary Cluster Name for your CE: " cluster_name
 read -p "Enter the Latitude: " latitude
@@ -18,6 +26,8 @@ read -p "Enter the Site Token (from XC Console): " site_token
 read -p "Enter the number of replicas (1 for single-node, 3 for multi-node): " replicas
 
 # Validate inputs
+validate_non_empty "$cluster_name" "Cluster Name"
+validate_non_empty "$site_token" "Site Token"
 validate_number "$latitude" "Latitude"
 validate_number "$longitude" "Longitude"
 
@@ -33,13 +43,32 @@ echo "Longitude: $longitude"
 echo "Site Token: $site_token"
 echo "Replicas: $replicas"
 
+### Huge Pages Configuration ###
+echo "Configuring HugePages..."
+# Create the directory for systemd drop-in configuration if it doesn't exist
+sudo mkdir -p /etc/systemd/system/kubelet.service.d/
+
+# Add systemd drop-in configuration for HugePages allocation
+sudo tee /etc/systemd/system/kubelet.service.d/20-hugepages.conf > /dev/null <<EOF
+[Service]
+Environment="KUBELET_EXTRA_ARGS=--feature-gates=HugePageStorageMediumSize=2Mi --kube-reserved=cpu=200m,memory=1Gi,ephemeral-storage=1Gi,hugepages-2Mi=64Mi"
+EOF
+
+# Reload systemd and restart kubelet to apply HugePages configuration
+sudo systemctl daemon-reload
+sudo systemctl restart kubelet
+
+
 # Create namespace first
+echo "Creating namespace 'ves-system'..."
 kubectl create namespace ves-system || true  # If the namespace exists, continue without error
 
 # Apply the local-path provisioner
+echo "Applying local-path provisioner..."
 kubectl apply -f https://raw.githubusercontent.com/rancher/local-path-provisioner/master/deploy/local-path-storage.yaml
 
 # Create StorageClass for dynamic provisioning
+echo "Creating StorageClass 'local-path'..."
 cat <<EOF | kubectl apply -f -
 apiVersion: storage.k8s.io/v1
 kind: StorageClass
@@ -48,8 +77,6 @@ metadata:
 provisioner: rancher.io/local-path
 volumeBindingMode: WaitForFirstConsumer
 EOF
-
-echo "StorageClass 'local-path' created."
 
 # Generate the YAML configuration with user inputs
 cat <<EOF > ce-k8s.yaml
@@ -358,18 +385,6 @@ else
   echo "Error applying configuration."
   exit 1
 fi
-
-# Add systemd drop-in configuration for HugePages allocation
-cat <<EOF | sudo tee /etc/systemd/system/kubelet.service.d/20-hugepages.conf
-[Service]
-Environment="KUBELET_EXTRA_ARGS=--feature-gates=HugePageStorageMediumSize=2Mi --kube-reserved=cpu=200m,memory=1Gi,ephemeral-storage=1Gi,hugepages-2Mi=64Mi"
-EOF
-
-# Reload systemd and restart kubelet to apply HugePages configuration
-sudo systemctl daemon-reload
-sudo systemctl restart kubelet
-
-echo "HugePages configuration applied and kubelet restarted."
 
 echo "Verify that the pod with the vp-manager-0 under the NAME column indicates that the Site pod was created."
 

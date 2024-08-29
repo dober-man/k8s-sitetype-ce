@@ -22,7 +22,7 @@ Ubuntu K8s (Vanilla Install of Ubuntu 22.04) 8/16/100
 (optional) 1 - Ubuntu K8s worker (Vanilla Install of Ubuntu 22.04) 8/16/100
 
 XC Console - (You will need owner/admin access to a tenant)
-   Permissions Needed: 
+   Permissions Needed: (granular permission listing coming soon)
    * Perm1
    * Perm2
 

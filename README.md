@@ -22,9 +22,12 @@ Ubuntu K8s (Vanilla Install of Ubuntu 22.04) 8/16/100
 (optional) 1 - Ubuntu K8s worker (Vanilla Install of Ubuntu 22.04) 8/16/100
 
 XC Console - (You will need owner/admin access to a tenant)
-   Permissions Needed: (granular permission listing coming soon)
-   * Perm1
-   * Perm2
+If you are not owner/admin, a role with these minimum permissions is required: 
+   * Perm1 - "Admin" for the namespace you are working in (ns = **default** in this lab)
+   * Perm2 - "f5xc-multi-cloud-app-connect-user" (built in role) for the **systems** namespace.
+
+<img width="377" alt="image" src="https://github.com/user-attachments/assets/f0dcad9f-f09e-4b22-8d8e-3b484202f903">
+
 
 ### HugePages 
 A feature of the Linux kernel. Verify node support by running: grep HugePages /proc/meminfo

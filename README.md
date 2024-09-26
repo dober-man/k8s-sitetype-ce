@@ -28,6 +28,11 @@ If you are not owner/admin, a role with these minimum permissions is required:
 
 <img width="377" alt="image" src="https://github.com/user-attachments/assets/f0dcad9f-f09e-4b22-8d8e-3b484202f903">
 
+> **Note:** XC Permissions follow a simple nested structure. You assign “roles” to users or groups. Roles are made up of “API Groups” (these are not user configurable – they already exist in the tenant and are sometimes updated/added). “API Groups” consist of “API Elements” which define CRUD permissions against API endpoints. In order to build a role answer these questions:
+
+“What API endpoints does a user need to do the things they want to do?”
+“What API elements will allow these actions?”
+“Which API groups contain these elements?”
 
 ### HugePages 
 A feature of the Linux kernel. Verify node support by running: grep HugePages /proc/meminfo
@@ -312,7 +317,8 @@ The output will be in the $HOME/certs folder.
 
 ### Return to XC Console and enter your TLS Server parameters
 <br>
-Note: For this setup we will leave the SNI blank.
+
+For this setup **leave the SNI blank.**
 Copy the appropriate data from the CA and client cert and key files from the $HOME/certs directory. 
 
 <img width="986" alt="image" src="https://github.com/user-attachments/assets/29c7f824-238c-4f75-b664-71091a861c00">

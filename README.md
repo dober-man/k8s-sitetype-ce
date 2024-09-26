@@ -119,32 +119,32 @@ Please wait until all pods are "Running" before moving to the next step.
 
 Pods: 
 
-etcd-0 
+**etcd-0**
 <br>
 Containers: 2
 <br>
 Role: This pod is part of the etcd cluster, which is the key-value store used by XC Kubernetes to store all cluster data. This is different than the K8s etcd running in the kube-system namespace. 
 
-prometheus
+**prometheus**
 <br>
 Containers: 5
 <br>
 Role: This pod is running Prometheus, a monitoring and alerting toolkit commonly used to gather metrics and monitor the Kubernetes cluster.
 
-ver-0
+**ver-0**
 <br>
 Containers: 17
 <br>
 Role: Volterra Edge Router (VER), a component of F5 Distributed Cloud Services used for networking and security functions.
 
 
-volterra-ce-init-hxgmm
+**volterra-ce-init-hxgmm**
 <br>
 Containers: 1
 <br>
-Role: This is an initialization pod for Volterra Control Edge (CE), possibly used to initialize or bootstrap the environment.
+Role: This is an initialization pod for Volterra Control Edge (CE), used to initialize or bootstrap the environment.
 
-vp-manager-0
+**vp-manager-0**
 <br>
 Containers: 1
 <br>

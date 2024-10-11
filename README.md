@@ -87,7 +87,7 @@ You want to make sure you see the following pods "Running" before proceeding.
 
 
 ## XC Console
-Login in to XC Cloud Console and accept the CE registration request.
+Login in to XC Cloud Console and accept the CE registration request. (hit "refresh" a few times...the reg request can take a few moments to appear)
 
 ### Multicloud Network Connect -> Manage -> Site Management -> Registrations
 

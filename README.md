@@ -79,6 +79,8 @@ The ce-k8s-install.sh script specifies a local-path StorageClass for dynamic sto
 
 From the $HOME directory on the K8s master server run the ce-k8s-install.sh script and provide the user-input variables. Don't forget to give the script +x permissions. 
 
+> **Important:** For the user-input variable "Replicas", just enter single or "1" for this lab.  
+
 As the script completes it will suggest running: watch kubectl get pods -n ves-system -o=wide
 
 You want to make sure you see the following pods "Running" before proceeding. 

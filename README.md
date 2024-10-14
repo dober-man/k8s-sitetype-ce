@@ -423,7 +423,7 @@ http://nginx.example.com/cart?search=aaa’><script>prompt(‘Please+enter+your+
 
 <img width="673" alt="image" src="https://github.com/user-attachments/assets/c6fad06f-be4e-4bd2-8742-b45cb989130f">
 
-# Coming Soon....adding the LB to the CE intstead of internet for local LB of service. 
+# Coming Soon....adding the LB to the CE instead of internet for local LB of service. 
 
 
 

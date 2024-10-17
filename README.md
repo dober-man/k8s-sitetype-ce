@@ -1,4 +1,6 @@
-A K8s Site-type CE is a Customer Edge Service deployed as pods on a K8s cluster. This CE can act as a K8s ingress controller with built-in application security. It also enables the F5® Distributed Cloud Mesh (Mesh) features, such as discovery of services of the K8s cluster, publish of other Site's services on this Site or publish of this Site's discovered services on other Sites via an F5 XC Load Balancer.
+A K8s Site-type CE is a Customer Edge Service deployed as pods on a K8s cluster. This CE can act as a K8s ingress controller with built-in application security. It also enables the F5® Distributed Cloud Mesh (Mesh) features, such as discovery of services of the K8s cluster, publish of other Site's services on this Site or publish of this Site's discovered services on other Sites via an F5 XC Load Balancer. 
+
+This lab setup will focus on service discovery within a local K8s cluster and then publishing that service to the Internet through our XC Regional Edge Load Balancers. We can also host the Load Balancer locally on the CE which opens up the door to several unique and advantageous architectures. (See the k8s-sitetype-lb.md document) 
 
 The F5 XC Load Balancer offers an entire suite of security services providing an easy to consume and globally redundant layered security model while serving content from private K8's clusters.
 
@@ -7,11 +9,11 @@ Reference Doc: https://docs.cloud.f5.com/docs/how-to/site-management/create-k8s-
 # Overview and Goals 
 1.  Build and configure a Ubuntu server with K8's. 
 2.  Configure K8s site-type CE Ingress Controller for Service Discovery
-3.  Publish and secure service to public
+3.  Publish and secure discovered service to public via XC Regioal Edges
 
 # Features
 * Automated Installation: The scripts install a Kubernetes cluster, configure the cluster for CE services and setup of Auth with minimal user intervention. 
-* Customizable Options: Users can define custom settings for the installation, ensuring the setup meets their specific requirements.
+* Customizable Options: Users can define custom settings via interactive script prompts for the installation, ensuring the setup meets their specific requirements.
 
 ## Prerequisite
 
@@ -28,11 +30,7 @@ If you are not owner/admin, a role with these minimum permissions is required:
 
 <img width="377" alt="image" src="https://github.com/user-attachments/assets/f0dcad9f-f09e-4b22-8d8e-3b484202f903">
 
-> **Note:** XC Permissions follow a simple nested structure. You assign “roles” to users or groups. Roles are made up of “API Groups” (these are not user configurable – they already exist in the tenant and are sometimes updated/added). “API Groups” consist of “API Elements” which define CRUD permissions against API endpoints. In order to build a role answer these questions:
-
-* “What API endpoints does a user need to do the things they want to do?”
-* “What API elements will allow these actions?”
-* “Which API groups contain these elements?”
+> **Note:** XC Permissions follow a simple nested structure. You assign “roles” to users or groups. Roles are made up of “API Groups” (these are not user configurable – they already exist in the tenant and are sometimes updated/added). “API Groups” consist of “API Elements” which define CRUD permissions against API endpoints. I
 
 ### HugePages 
 A feature of the Linux kernel. Verify node support by running: grep HugePages /proc/meminfo
@@ -137,7 +135,7 @@ Role: This pod is running Prometheus, a monitoring and alerting toolkit commonly
 <br>
 Containers: 17
 <br>
-Role: Volterra Edge Router (VER), a component of F5 Distributed Cloud Services used for networking and security functions.
+Role: Volterra Enterprise Router (VER), a component of F5 Distributed Cloud Services used for networking and security functions.
 
 
 **volterra-ce-init-hxgmm**
@@ -215,7 +213,7 @@ ClusterIP: Yes
 <br>
 Ports: Various ports mapped to high NodePort values, enabling external access to the VER component on these ports.
 <br>
-Role: Exposes the Volterra Edge Router to external networks through specific NodePorts.
+Role: Exposes the Volterra Enterprise Router to external networks through specific NodePorts.
 
 vpm
 <br>
@@ -233,7 +231,7 @@ Role: Exposes the Volterra Platform Manager to external networks through a speci
 
 * Headless Service (etcd): The etcd service does not have a ClusterIP and instead directly resolves to the individual pod IPs of the StatefulSet, enabling clients to interact with each pod directly.
 
-* NodePort Services (ver, vpm): These services are exposed to external traffic on specific ports of each node's IP address. NodePorts enable external clients to access these services through any of the cluster nodes on a specific port.
+* NodePort Services (ver, vpm): These services are exposed to external traffic on specific ports of each node's IP address. **NodePorts enable external clients to access these services through any of the cluster nodes on a specific port.**
 
 
 ## Service Discovery
@@ -423,7 +421,7 @@ http://nginx.example.com/cart?search=aaa’><script>prompt(‘Please+enter+your+
 
 <img width="673" alt="image" src="https://github.com/user-attachments/assets/c6fad06f-be4e-4bd2-8742-b45cb989130f">
 
-# Coming Soon....adding the LB to the CE instead of internet for local LB of service. 
+#### But wait there is more....We can also host the LB on the CE directly making it an ingress controller of sorts. For a detailed look at that architecture, please review the k8s-sitetype-lb.md article. 
 
 
 
